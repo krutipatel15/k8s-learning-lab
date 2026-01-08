@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+spec:
+  hostname: myapp-hostname
+  subdomain: myapp-subdomain
+# hostnameOverride: myapp-hostname.subdomain  (override both hostname and FQDN )
+  containers:
+  - name: myapp-container
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
