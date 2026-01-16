@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  suspend: false
+  completions: 10
+  completionMode: Indexed # or NonIndexed 
+  parallelism: 3
+  backoffLimitPerIndex: 1
+  maxFailedIndexes: 5
+  activeDeadlineSeconds: 100
+  ttlSecondsAfterFinished: 100
+  successPolicy:
+    rules:
+      - succeededIndexes: 0,2-3
+        succeededCount: 1      
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: pi
+        image: perl:5.34.0
+        command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+  podFailurePolicy:
+      rules:
+      - action: FailJob
+        onExitCodes:
+          containerName: pi #or all
+          operator: In             
+          values: [42]
+      - action: Ignore             
+        onPodConditions:
+        - type: DisruptionTarget
