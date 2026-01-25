@@ -3,9 +3,10 @@ kind: Service
 metadata:
   name: nginx-service
 spec:
-  type: ClusterIP #NodePort, LoadBalancer
+  type: ClusterIP #NodePort, LoadBalancer and None
   selector:
     app.kubernetes.io/name: proxy
+    trafficDistribution: PreferSameZone # or PreferSameNode
   ports:
     - name: http
       protocol: TCP
