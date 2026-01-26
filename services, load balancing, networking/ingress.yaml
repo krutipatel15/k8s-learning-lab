@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-default-service
+spec:
+  defaultBackend:
+    service:
+      name: default-backend-service
+      port:
+        number: 80
+  IngressClass: external-lb
+  tls:
+  - hosts:
+      - https-aa.bb.com
+    secretName: testsecret-tls
+  rules:
+  - host: "aa.bb.com"
+    http:
+      paths:
+      - pathType: Prefix # ImplementationSpecific or Exact
+        path: "/cc"
+        backend:
+          service:
+            name: service1
+            port:
+              number: 80
+  - host: "*.aa.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/ddd"
+        backend:
+          service:
+            name: service2
+            port:
+              number: 80
